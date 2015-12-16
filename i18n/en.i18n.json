@@ -453,6 +453,7 @@
   "strike" : "strike",
   "Submit" : "Submit",
   "Success" : "Success",
+  "The_channel_name_is_required" : "The channel name is required"
   "The_configured_URL_is_different_from_the_URL_you_are_accessing" : "The configured URL is different from the URL you are accessing!",
   "The_field_is_required" : "The field %s is required.",
   "The_server_will_restart_in_s_seconds" : "The server will restart in %s seconds",
