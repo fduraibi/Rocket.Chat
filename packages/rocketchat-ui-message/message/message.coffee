@@ -39,8 +39,6 @@ Template.message.helpers
 		# otherwise a special "?" character that will be
 		# rendered as a special avatar
 		return @editedBy?.username or "?"
-	pinned: ->
-		return this.pinned
 	canEdit: ->
 		hasPermission = RocketChat.authz.hasAtLeastOnePermission('edit-message', this.rid)
 		isEditAllowed = RocketChat.settings.get 'Message_AllowEditing'
@@ -61,10 +59,6 @@ Template.message.helpers
 			return true
 
 		return RocketChat.settings.get('Message_AllowDeleting') and this.u?._id is Meteor.userId()
-	canPin: ->
-		return RocketChat.settings.get 'Message_AllowPinning'
-	canStar: ->
-		return RocketChat.settings.get 'Message_AllowStarring'
 	showEditedStatus: ->
 		return RocketChat.settings.get 'Message_ShowEditedStatus'
 	label: ->
@@ -123,7 +117,10 @@ Template.message.onViewRendered = (context) ->
 		$previousNode = $(previousNode)
 		$nextNode = $(nextNode)
 
-		if previousNode?.dataset?
+		unless previousNode?
+			$currentNode.addClass('new-day').removeClass('sequential')
+
+		else if previousNode?.dataset?
 			previousDataset = previousNode.dataset
 
 			if previousDataset.date isnt currentDataset.date
@@ -147,17 +144,18 @@ Template.message.onViewRendered = (context) ->
 			else
 				$nextNode.removeClass('new-day')
 
-			if nextDataset.username isnt currentDataset.username or parseInt(nextDataset.timestamp) - parseInt(currentDataset.timestamp) > RocketChat.settings.get('Message_GroupingPeriod') * 1000
-				$nextNode.removeClass('sequential')
-			else
-				$nextNode.addClass('sequential')
-
-			if not nextNode?
-				templateInstance = view.parentView.parentView.parentView.parentView.parentView.templateInstance?()
-
-				if currentNode.classList.contains('own') is true
-					templateInstance?.atBottom = true
+			if nextDataset.groupable isnt 'false'
+				if nextDataset.username isnt currentDataset.username or parseInt(nextDataset.timestamp) - parseInt(currentDataset.timestamp) > RocketChat.settings.get('Message_GroupingPeriod') * 1000
+					$nextNode.removeClass('sequential')
 				else
-					if templateInstance?.atBottom isnt true
-						newMessage = templateInstance?.find(".new-message")
-						newMessage?.className = "new-message"
+					$nextNode.addClass('sequential')
+
+		if not nextNode?
+			templateInstance = view.parentView.parentView.parentView.parentView.parentView.templateInstance?()
+
+			if currentNode.classList.contains('own') is true
+				templateInstance?.atBottom = true
+			else
+				if templateInstance?.atBottom isnt true
+					newMessage = templateInstance?.find(".new-message")
+					newMessage?.className = "new-message"
