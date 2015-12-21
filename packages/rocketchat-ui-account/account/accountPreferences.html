@@ -68,6 +68,16 @@
 									<label><input type="radio" name="unreadRoomsMode" value="0" checked="{{checked 'unreadRoomsMode' false true}}" /> {{_ "False"}}</label>
 								</div>
 							</div>
+							<div class="input-line double-col">
+								<label>{{_ "Font_Size"}}</label>
+								<div>
+									<select id="font_size">
+										{{#each font_sizes}}
+										<option value="{{key}}" selected="{{userFontSize key}}" dir="auto">{{name}}</option>
+										{{/each}}
+									</select>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="section">

@@ -35,14 +35,40 @@ Meteor.startup ->
 				Function(localeFn)()
 				moment.locale(language)
 
+	setFontSize = (size) ->
+		console.log "Set my SIZE= ", size
+		$('message body').css 'font-size', "#{size}"
+
 	Tracker.autorun (c) ->
 		if Meteor.user()?.language?
 			c.stop()
 
-			localStorage.setItem("userLanguage", Meteor.user().language)
-			setLanguage Meteor.user().language
+			if localStorage.getItem('userLanguage') isnt Meteor.user().language
+				localStorage.setItem("userLanguage", Meteor.user().language)
+				setLanguage Meteor.user().language
+				if isRtl localStorage.getItem "userLanguage"
+					$('html').addClass "rtl"
+
+	Tracker.autorun (c) ->
+		if Meteor.user()?.settings?.preferences?.userFontSize?
+			#c.stop()
+
+			console.log "REAL SAVED SIZE= ", Meteor.user().settings.preferences.userFontSize
+
+			if localStorage.getItem('userFontSize') isnt Meteor.user().settings.preferences.userFontSize
+				localStorage.setItem("userFontSize", Meteor.user().settings.preferences.userFontSize)
+				setFontSize Meteor.user().settings.preferences.userFontSize
+				console.log "We set the REAL SIZE....xxxx "
 
 	userLanguage = localStorage.getItem("userLanguage")
 	userLanguage ?= defaultUserLanguage()
 
 	setLanguage userLanguage
+
+	userFontSize = localStorage.getItem("userFontSize")
+	userFontSize ?= '100%'
+
+	setFontSize userFontSize
+	
+	console.log "SAVED SIZE= ", userFontSize
+

@@ -13,6 +13,19 @@ Template.accountPreferences.helpers
 	desktopNotificationDisabled: ->
 		return (KonchatNotification.notificationStatus.get() is 'denied') or (window.Notification && Notification.permission is "denied")
 
+	font_sizes: ->
+		return [{name: t('Very_Very_Small'), key: '70%' },
+				{name: t('Very_Small'), key: '80%' },
+				{name: t('Small'), key: '90%' },
+				{name: t('Medium'), key: '100%' },
+				{name: t('Large'), key: '110%' },
+				{name: t('Very_Large'), key: '120%' },
+				{name: t('Very_Very_Large'), key: '130%' }]
+
+	userFontSize: (key) ->
+		ref = undefined
+		(if (ref = localStorage.getItem('userFontSize') or '100%') != null then ref else undefined) == key
+
 Template.accountPreferences.onCreated ->
 	settingsTemplate = this.parentTemplate(3)
 	settingsTemplate.child ?= []
@@ -42,6 +55,11 @@ Template.accountPreferences.onCreated ->
 		data.compactView = $('input[name=compactView]:checked').val()
 		data.unreadRoomsMode = $('input[name=unreadRoomsMode]:checked').val()
 		data.autoImageLoad = $('input[name=autoImageLoad]:checked').val()
+
+		selectedFontSize = $('#font_size').val()
+		if localStorage.getItem('userFontSize') isnt selectedFontSize
+			localStorage.setItem 'userFontSize', selectedFontSize
+			data.userFontSize = selectedFontSize
 
 		Meteor.call 'saveUserPreferences', data, (error, results) ->
 			if results
