@@ -52,20 +52,8 @@ Meteor.startup ->
 
 	setFontSize = (size) ->
 		console.log "Set my SIZE= ", size
-		$('message body').css 'font-size', "#{size}"
-
-	Tracker.autorun (c) ->
-		if Meteor.user()?.settings?.preferences?.userFontSize?
-			#c.stop()
-
-			console.log "REAL SAVED SIZE= ", Meteor.user().settings.preferences.userFontSize
-
-			if localStorage.getItem('userFontSize') isnt Meteor.user().settings.preferences.userFontSize
-				localStorage.setItem("userFontSize", Meteor.user().settings.preferences.userFontSize)
-				setFontSize Meteor.user().settings.preferences.userFontSize
-				console.log "We set the REAL SIZE....xxxx "
+		$('html').css 'font-size', "#{size}"
 
 	userFontSize = localStorage.getItem("userFontSize")
-	userFontSize ?= '100%'
+	userFontSize ?= '62.5%'
 	setFontSize userFontSize
-	console.log "SAVED SIZE= ", userFontSize

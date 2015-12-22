@@ -14,17 +14,17 @@ Template.accountPreferences.helpers
 		return (KonchatNotification.notificationStatus.get() is 'denied') or (window.Notification && Notification.permission is "denied")
 
 	font_sizes: ->
-		return [{name: t('Very_Very_Small'), key: '70%' },
-				{name: t('Very_Small'), key: '80%' },
-				{name: t('Small'), key: '90%' },
-				{name: t('Medium'), key: '100%' },
-				{name: t('Large'), key: '110%' },
-				{name: t('Very_Large'), key: '120%' },
-				{name: t('Very_Very_Large'), key: '130%' }]
+		return [{name: t('Very_Very_Small'), key: '32.5%' },
+				{name: t('Very_Small'), key: '42.5%' },
+				{name: t('Small'), key: '52.5%' },
+				{name: t('Medium'), key: '62.5%' },
+				{name: t('Large'), key: '72.5%' },
+				{name: t('Very_Large'), key: '82.5%' },
+				{name: t('Very_Very_Large'), key: '92.5%' }]
 
 	userFontSize: (key) ->
 		ref = undefined
-		(if (ref = localStorage.getItem('userFontSize') or '100%') != null then ref else undefined) == key
+		(if (ref = localStorage.getItem('userFontSize') or '62.5%') != null then ref else undefined) == key
 
 Template.accountPreferences.onCreated ->
 	settingsTemplate = this.parentTemplate(3)
@@ -59,7 +59,7 @@ Template.accountPreferences.onCreated ->
 		selectedFontSize = $('#font_size').val()
 		if localStorage.getItem('userFontSize') isnt selectedFontSize
 			localStorage.setItem 'userFontSize', selectedFontSize
-			data.userFontSize = selectedFontSize
+			$('html').css 'font-size', "#{selectedFontSize}"
 
 		Meteor.call 'saveUserPreferences', data, (error, results) ->
 			if results
